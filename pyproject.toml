@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cab-eec"
+version = "0.1.0"
+description = "CAB EEC analysis pipeline with uproot I/O, FastJet/Lund prongs, staged caches, and parquet outputs."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pyyaml",
+  "uproot",
+  "awkward",
+  "pyarrow",
+  "matplotlib",
+  "tqdm",
+]
+
+[project.optional-dependencies]
+fastjet = ["heppyyier", "cppyy"]
+fit = ["scipy"]
+test = ["pytest"]
+
+[project.scripts]
+cab-eec = "cab_eec.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

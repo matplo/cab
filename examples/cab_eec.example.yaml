@@ -1,0 +1,62 @@
+output_dir: outputs/example
+cache_dir: .cache/cab_eec
+
+samples:
+  - name: jewel_vac
+    files:
+      - /path/to/jewel_vac_*.root
+  - name: jewel_med
+    files:
+      - /path/to/jewel_med_*.root
+
+input:
+  tree: tracks
+  branches:
+    event_id: eventID
+    px: px
+    py: py
+    pz: pz
+    energy: energy
+  batch_entries: 250000
+
+jet:
+  R: 0.4
+  pt_min: 100.0
+  pt_max: 110.0
+  eta_max: 2.5
+  eta_margin: 0.05
+  pt_particle_min: 0.1
+
+selections:
+  - name: maxkt
+    mode: max_kt
+  - name: sd_z0p1
+    mode: soft_drop
+    z_cut: 0.1
+  - name: sd_z0p2
+    mode: soft_drop
+    z_cut: 0.2
+
+eec:
+  lndr_min: -5.0
+  lndr_max: -0.9
+  nbins: 60
+  normalizations:
+    - jet_pt2
+    - radiator_pt2
+    - radiator_scalar_sum_pt2
+    - per_prong
+
+plot:
+  output_dir: outputs/example/plots
+  eec_yscale: linear
+  ratio_ylim: [0, 4]
+  # Optional separate overrides:
+  # ratio_eec_ylim: [0, 4]
+  # ratio_cab_ylim: [0, 4]
+  # Optional. If omitted, plotting auto-detects PbPb/pp when samples named
+  # "PbPb" and "pp" are present.
+  ratio_pairs:
+    - numerator: jewel_med
+      denominator: jewel_vac
+      label: jewel_med/jewel_vac
