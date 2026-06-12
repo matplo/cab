@@ -34,7 +34,7 @@ def plot(config: dict[str, Any], clean: bool = False) -> list[str]:
     eec_path = output_dir / "eec.parquet"
     if not eec_path.exists():
         raise FileNotFoundError(f"EEC parquet not found: {eec_path}")
-    rows = pq.read_table(eec_path).to_pylist()
+    rows = _filter_normalization_rows(pq.read_table(eec_path).to_pylist(), config)
     saved = []
     saved.extend(_plot_cab(rows, plot_dir, plt, config))
     saved.extend(_plot_components(rows, plot_dir, plt, config))
@@ -42,6 +42,14 @@ def plot(config: dict[str, Any], clean: bool = False) -> list[str]:
     saved.extend(_plot_rg(config, plot_dir, plt))
     saved.extend(_plot_rg_ratios(config, plot_dir, plt, _ratio_pairs(config, rows)))
     return saved
+
+
+def _filter_normalization_rows(rows: list[dict[str, Any]], config: dict[str, Any]) -> list[dict[str, Any]]:
+    requested = config.get("eec", {}).get("normalizations")
+    if not requested:
+        return rows
+    allowed = set(requested)
+    return [row for row in rows if row.get("normalization") in allowed]
 
 
 def _plot_cab(rows: list[dict[str, Any]], plot_dir: Path, plt: Any, config: dict[str, Any]) -> list[str]:

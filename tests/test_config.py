@@ -34,3 +34,43 @@ samples:
         str(tmp_path / "jewel_vac_1.root"),
         str(tmp_path / "jewel_vac_2.root"),
     ]
+
+
+def test_default_normalizations_include_scalar_radiator_sum(tmp_path):
+    sample = tmp_path / "input.root"
+    sample.write_text("")
+    cfg_path = tmp_path / "config.yaml"
+    cfg_path.write_text(
+        f"""
+samples:
+  - name: s
+    files:
+      - {sample}
+""",
+        encoding="utf-8",
+    )
+    cfg = load_config(cfg_path)
+    assert cfg["eec"]["normalizations"] == ["jet_pt2", "radiator_pt2", "radiator_scalar_sum_pt2"]
+
+
+def test_parent_pt2_config_aliases_to_radiator_pt2(tmp_path):
+    sample = tmp_path / "input.root"
+    sample.write_text("")
+    cfg_path = tmp_path / "config.yaml"
+    cfg_path.write_text(
+        f"""
+samples:
+  - name: s
+    files:
+      - {sample}
+eec:
+  normalizations:
+    - jet_pt2
+    - parent_pt2
+    - radiator_pt2
+    - radiator_scalar_sum_pt2
+""",
+        encoding="utf-8",
+    )
+    cfg = load_config(cfg_path)
+    assert cfg["eec"]["normalizations"] == ["jet_pt2", "radiator_pt2", "radiator_scalar_sum_pt2"]

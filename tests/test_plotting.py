@@ -1,6 +1,13 @@
 import numpy as np
 
-from cab_eec.plotting import _hist_density_ratio, _ratio_pairs, _ratio_with_uncertainty, _ratio_ylim, _set_lndr_xlim
+from cab_eec.plotting import (
+    _filter_normalization_rows,
+    _hist_density_ratio,
+    _ratio_pairs,
+    _ratio_with_uncertainty,
+    _ratio_ylim,
+    _set_lndr_xlim,
+)
 
 
 def test_ratio_with_uncertainty():
@@ -56,3 +63,14 @@ def test_set_lndr_xlim_uses_eec_config():
     ax = Axis()
     _set_lndr_xlim(ax, {"eec": {"lndr_min": -5.0, "lndr_max": -0.9}})
     assert ax.xlim == (-5.0, -0.9)
+
+
+def test_filter_normalization_rows_uses_configured_canonical_names():
+    rows = [
+        {"normalization": "jet_pt2"},
+        {"normalization": "radiator_pt2"},
+        {"normalization": "radiator_scalar_sum_pt2"},
+        {"normalization": "parent_pt2"},
+    ]
+    config = {"eec": {"normalizations": ["jet_pt2", "radiator_pt2", "radiator_scalar_sum_pt2"]}}
+    assert _filter_normalization_rows(rows, config) == rows[:3]

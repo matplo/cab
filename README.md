@@ -86,5 +86,7 @@ EEC normalization modes:
 - `jet_pt2`: denominator is the selected jet `pT^2`.
 - `radiator_pt2`: denominator is `LundDeclustering.pair().perp()^2`, the vector-summed selected radiator pT from fjcontrib.
 - `radiator_scalar_sum_pt2`: denominator is `(pT_A + pT_B)^2`, where `pT_A` and `pT_B` are scalar sums over filtered prong constituents.
-- `parent_pt2`: backward-compatible alias for `radiator_pt2`.
 - `per_prong`: AA uses `pT_A^2`, BB uses `pT_B^2`, and AB uses `pT_A * pT_B`.
+
+Legacy configs using `parent_pt2` are accepted as an alias for `radiator_pt2`,
+but new analyses should use `radiator_pt2`.

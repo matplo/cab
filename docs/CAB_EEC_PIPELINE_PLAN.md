@@ -107,5 +107,7 @@ Plot products include:
 
 - v1 optimizes for JEWEL ROOT-format `tracks` inputs.
 - Default prong definition is Lund-selected.
-- Default radiator normalization is configurable, with `(pT_A + pT_B)^2` preferred.
+- Default radiator normalization is configurable. Use `radiator_pt2` for the
+  fjcontrib selected-radiator `pair().perp()^2` scale and
+  `radiator_scalar_sum_pt2` for the scalar prong-sum `(pT_A + pT_B)^2` scale.
 - Cached splitting records may be larger than final EEC tables, but this is the right tradeoff because it avoids rerunning uproot I/O, jet finding, and Lund declustering when changing EEC binning or plots.

@@ -40,7 +40,7 @@ DEFAULT_CONFIG: dict[str, Any] = {
         "lndr_min": -5.0,
         "lndr_max": 1.5,
         "nbins": 60,
-        "normalizations": ["jet_pt2", "radiator_pt2"],
+        "normalizations": ["jet_pt2", "radiator_pt2", "radiator_scalar_sum_pt2"],
     },
     "output_dir": "outputs",
     "cache_dir": ".cache/cab_eec",
@@ -70,7 +70,7 @@ def load_config(path: str | Path) -> dict[str, Any]:
     if not cfg["samples"]:
         raise ValueError("config must define at least one sample under 'samples'")
     cfg["selections"] = [_normalize_selection(s) for s in cfg.get("selections", [])]
-    cfg["eec"]["normalizations"] = _as_list(cfg["eec"].get("normalizations", ["jet_pt2"]))
+    cfg["eec"]["normalizations"] = _normalize_eec_normalizations(cfg["eec"].get("normalizations", ["jet_pt2"]))
     return cfg
 
 
@@ -87,6 +87,19 @@ def _as_list(value: Any) -> list[Any]:
     if isinstance(value, list):
         return value
     return [value]
+
+
+def _normalize_eec_normalizations(value: Any) -> list[str]:
+    aliases = {"parent_pt2": "radiator_pt2"}
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in _as_list(value):
+        name = aliases.get(str(item), str(item))
+        if name in seen:
+            continue
+        out.append(name)
+        seen.add(name)
+    return out
 
 
 def _normalize_sample(sample: dict[str, Any], base: Path) -> dict[str, Any]:
