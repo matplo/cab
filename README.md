@@ -75,11 +75,37 @@ packages, but the analysis code does not rely on native ROOT or PyROOT.
 
 ## Notebooks
 
-The notebooks are post-processing tools for parquet outputs produced by
-`cab-eec run`. They expect to be run from the repository root, where
-`config.yaml` resolves `output_dir`, `eec.parquet`, and the per-sample
-`*_splittings.parquet` files. Notebook-generated CSVs and PNGs are analysis
-products and are ignored by git.
+The repository includes two kinds of notebooks. The parquet post-processing
+notebooks expect to be run from the repository root, where `config.yaml`
+resolves `output_dir`, `eec.parquet`, and the per-sample `*_splittings.parquet`
+files produced by `cab-eec run`. The generated-event notebooks run Pythia8 and
+FastJet/fjcontrib in memory through `heppyyier-utils`, then reuse the CAB
+FastJet/Lund and EEC classes directly. Notebook-generated CSVs, caches, and
+PNGs are analysis products and are ignored by git.
+
+[notebooks/cab_pythia_fastjet_pt_ratio.ipynb](notebooks/cab_pythia_fastjet_pt_ratio.ipynb)
+is a generated-event demonstration based on the `heppyyier-utils` Pythia/FastJet
+example. It uses `PythiaConfig.pp_hard_qcd`, direct heppyyier loading of
+`pythia8`, `fastjet`, and `fjcontrib`, then reuses the CAB FastJet/Lund and EEC
+classes in memory. The default setup compares narrow jet-pT slices,
+`95 <= pT < 105 GeV` and `115 <= pT < 125 GeV`, and plots
+`CAB(pt100) / CAB(pt120)` with propagated uncertainties. The notebook can cache
+generated splitting records and EEC tables under
+`outputs/pythia_fastjet_pt_ratio/cache/`; cache filenames include a compact
+config label plus a hash, and JSON sidecars store the full config. The generic
+cache mechanics come from `heppyyier_utils.cache.ArtifactCache`; CAB still owns
+the physics payload schema stored in each cache file.
+
+[notebooks/cab_pythia_fastjet_flavor_ratio.ipynb](notebooks/cab_pythia_fastjet_flavor_ratio.ipynb)
+is the analogous generated-event workflow for `CAB(b jets) / CAB(light-quark
+jets)`. It uses reusable flavor-tagging helpers from `heppyyier-utils` and
+supports `hard_parton`, `hadron_ghost`, and `separate_processes` modes. The
+default is `separate_processes`: b jets are generated with
+`hard_qcd_beauty`, light jets with `hard_qcd_uds`, and both samples are still
+filtered by hard-parton truth matching with configurable
+`FLAVOR_MATCH_RADIUS = 0.3`. Light jets are uds partons by default, while charm
+and gluon jets are excluded from the denominator. It uses the same shared
+`ArtifactCache` machinery for generated-record and EEC-table caches.
 
 [notebooks/ab_most_probable_rl.ipynb](notebooks/ab_most_probable_rl.ipynb)
 extracts the most probable `R_L` from the AB EEC component. It fits the stored
