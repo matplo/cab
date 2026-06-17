@@ -14,7 +14,7 @@ Key decisions:
 
 ## Summary
 
-Build a fresh CAB analysis package in `/Users/ploskon/devel/cab` that reads ROOT-format JEWEL track files only through `uproot`, clusters jets with FastJet via heppyyier-style imports, selects prongs from Lund declustering, and writes reusable cached analysis products plus final parquet tables and plots.
+Build the CAB analysis package in this repository so it reads ROOT-format JEWEL track files only through `uproot`, clusters jets with FastJet via heppyyier-style imports, selects prongs from Lund declustering, and writes reusable cached analysis products plus final parquet tables and plots.
 
 The pipeline is split into cacheable stages so plot-only changes never rerun jet finding or EEC accumulation.
 
@@ -27,7 +27,7 @@ The pipeline is split into cacheable stages so plot-only changes never rerun jet
 - Use heppyyier-style FastJet setup:
   - `import heppyyier; heppyyier.load("fastjet"); heppyyier.load("fjcontrib")`
   - then `import cppyy, fastjet, fjcontrib`
-- Run locally through `henv`, for example `PYTHONPATH=src /Users/ploskon/.local/bin/henv --run python -m cab_eec.cli run config.yaml`.
+- Run locally through `henv`, for example `PYTHONPATH=src henv --run python -m cab_eec.cli run config.yaml`.
 - Read ROOT-format input with `uproot` only, expecting `tracks/eventID`, `px`, `py`, `pz`, and `energy`.
 - Stream events in `uproot` batches grouped by `eventID`; no PyROOT or native ROOT I/O.
 

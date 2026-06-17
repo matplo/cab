@@ -58,15 +58,15 @@ to `--recompute all`, while leaving `cache_dir` itself in place.
 The expected local environment is `henv`:
 
 ```bash
-/Users/ploskon/.local/bin/henv --run python --version
-/Users/ploskon/.local/bin/henv --run module avail
+henv --run python --version
+henv --run module avail
 ```
 
 For local development without installing the package:
 
 ```bash
-PYTHONPATH=src /Users/ploskon/.local/bin/henv --run python -m cab_eec.cli run config.yaml
-PYTHONPATH=src /Users/ploskon/.local/bin/henv --run python -m cab_eec.cli plot config.yaml
+PYTHONPATH=src henv --run python -m cab_eec.cli run config.yaml
+PYTHONPATH=src henv --run python -m cab_eec.cli plot config.yaml
 ```
 
 The Python backend loads FastJet/fjcontrib with `heppyyier.load("fastjet")` and
