@@ -16,6 +16,41 @@ cab-eec plot --clean config.yaml
 cab-eec inspect-cache config.yaml
 ```
 
+JEWEL HepMC event generation lives in `heppyyier-utils`, not in the CAB
+analysis package. A typical pre-analysis workflow is:
+
+```bash
+jewel_pipeline --tag pt100 --samples both --nevents 10000 --convert
+jewel_prepare --tag pbpb_001 --samples medium --job-id 1
+jewel_run outputs/jewel_events/pbpb_001
+jewel_convert outputs/jewel_events/pbpb_001/jewel_med/events/jewel_med_pbpb_001.hepmc \
+  outputs/jewel_events/pbpb_001/jewel_med/roots/jewel_med_pbpb_001.root \
+  --subtract-4mom
+```
+
+Install/update the utility package through heppyyier once the recipe is
+available:
+
+```bash
+heppyyier recipe update
+heppyyier install heppyyier-utils
+module load heppyyier-utils
+```
+
+The JEWEL utilities assume `jewel-2.4.0-simple` and `jewel-2.4.0-vac` are in
+`PATH`, write each sample into a self-contained run directory under
+`outputs/jewel_events/<tag>/`, and convert HepMC to CAB-compatible ROOT TTrees
+with `uproot`.
+For JEWEL production specifically, install/load `jewel` and `lhapdf` separately:
+
+```bash
+heppyyier install jewel lhapdf
+module load jewel lhapdf
+```
+
+The required LHAPDF sets are `CT14nlo` (`PDFSET 13100`) for pp/vacuum and
+`EPPS16nlo_CT14nlo_Pb208` (`PDFSET 901300`) for PbPb/medium.
+
 `plot --clean` removes only the configured plot directory before regenerating figures.
 `run --clean` removes the configured analysis `output_dir` before running and defaults
 to `--recompute all`, while leaving `cache_dir` itself in place.
