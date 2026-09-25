@@ -107,6 +107,19 @@ filtered by hard-parton truth matching with configurable
 and gluon jets are excluded from the denominator. It uses the same shared
 `ArtifactCache` machinery for generated-record and EEC-table caches.
 
+[notebooks/cab_pythia_fastjet_flavor_2d_ratio.ipynb](notebooks/cab_pythia_fastjet_flavor_2d_ratio.ipynb)
+uses the same generated-event flavor setup with Pythia phase-space power-law
+biasing, `pTHatMin = 5 GeV`, no `pTHatMax`, and loose jet acceptance
+`pT_jet > 5 GeV` with no practical eta or upper-pT jet cut. It keeps every Lund
+declustering with `kT > 1 GeV` instead of selecting only max-kT or Soft Drop
+splittings. It accumulates a 2D EEC histogram in `(R_L, pT_radiator)` bins,
+computes CAB for b jets and light-quark jets in each bin, and plots the 2D
+`CAB(b)`, `CAB(light)`, and `CAB(b) / CAB(light)` surfaces with propagated
+uncertainties available in the cached table. These heatmaps use a logarithmic
+diverging color scale where `1` is the blue/red boundary: values below `1` are
+blue, values above `1` are red. They also overlay the reference line
+`R_L = m_b / pT_radiator` with `m_b = 4.8 GeV`.
+
 [notebooks/ab_most_probable_rl.ipynb](notebooks/ab_most_probable_rl.ipynb)
 extracts the most probable `R_L` from the AB EEC component. It fits the stored
 `eec_AB` density directly, without multiplying by `R_L`, using a Gaussian-like
